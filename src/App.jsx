@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, {useState, useEffect} from 'react'
+import {supabase} from './createClient'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+
+    const [users, setUsers] = useState([])
+
+    
+    console.log(users);
+    useEffect(() => {
+        fetchUsers()
+    }, [])
+    async function fetchUsers(){
+        const {data} = await supabase.from('users').select('*')
+        setUsers(data)
+    console.log(users);
+    }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                {users.map((user) =>
+                <tr>
+                    <td>{user.id}</td>
+                    <td>{user.name}</td>
+                </tr> )}
+            </tbody>
+        </table>
+    </div>
   )
 }
 
